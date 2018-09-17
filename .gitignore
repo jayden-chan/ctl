@@ -1,21 +1,14 @@
-# Binaries for programs and plugins
-*.exe
-*.exe~
-*.dll
-*.so
-*.dylib
-
-# Test binary, build with `go test -c`
-*.test
-
-# Output of the go coverage tool, specifically when used with LiteIDE
-*.out
-
 # Environment files
 *.env
 
 # Vim swap files
 *.swp
 
-# Binary
-*ctl
+# Package manager files
+node_modules/
+.node_modules/
+package-lock.json
+yarn.lock
+
+# Compiled JS
+dist/
