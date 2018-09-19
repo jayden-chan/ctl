@@ -1,0 +1,25 @@
+{
+  "name": "ctl",
+  "version": "1.0.0",
+  "description": "Command line TODO list",
+  "main": "index.js",
+  "dependencies": {
+    "ky": "^0.3.0",
+    "vorpal": "^1.12.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jayden-chan/ctl.git"
+  },
+  "author": "Jayden Chan",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/jayden-chan/ctl/issues"
+  },
+  "homepage": "https://github.com/jayden-chan/ctl#readme"
+}

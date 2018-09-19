@@ -1,20 +1,21 @@
 const vorpal = require('vorpal')();
-const handlers = require('./handlers.js');
+const items = require('./handlers/items.js');
+const simple = require('./handlers/simple.js');
 
 vorpal
   .command('ls', 'Lists all items')
   .option('-a', 'Lists all items including hidden')
-  .action(handlers.list);
+  .action(items.list);
 
 vorpal
   .command('clear', 'Clears the virtual terminal')
   .alias('c')
-  .action(handlers.clear);
+  .action(simple.clear);
 
 vorpal
   .command('test', 'Random testing function')
   .option('-f', 'Force test')
-  .action(handlers.test);
+  .action(simple.test);
 
 vorpal
   .delimiter('ctl $')
