@@ -19,8 +19,16 @@ vorpal
   .action(simple.test);
 
 vorpal
-  .command('login', 'Login')
+  .command('register', 'Register a new account')
+  .action(api.register);
+
+vorpal
+  .command('login', 'Log in')
   .action(api.login);
+
+vorpal
+  .command('logout', 'Log out')
+  .action(api.logout);
 
 vorpal
   .delimiter('ctl $')
