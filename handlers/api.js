@@ -4,6 +4,8 @@ const ora = require('ora');
 const fs = require('fs');
 const homedir = require('os').homedir();
 
+const { Console } = require('console');
+
 exports.register = async (args, callback) => {
   const email = await prompts({
     type: 'text',
@@ -24,8 +26,9 @@ exports.register = async (args, callback) => {
     password: password.value
   })
     .then(response => {
-
-      spinner.succeed('Account created. Login with the \'login\' command');
+      if (response.status >= 200) {
+        spinner.succeed('Account created. Login with the \'login\' command');
+      }
     })
     .catch(error => {
       if (error.response.status === 400) {
@@ -36,7 +39,7 @@ exports.register = async (args, callback) => {
     });
 
   callback();
-}
+};
 
 exports.login = async (args, callback) => {
   const email = await prompts({
@@ -62,7 +65,7 @@ exports.login = async (args, callback) => {
       fs.readFile(homedir + '/.netrc', function (err, data) {
         if (err) throw err;
         if (data.indexOf('machine ctl-server.herokuapp.com') >= 0) {
-          console.log(data)
+          Console.log(data);
         }
       });
 
@@ -85,7 +88,7 @@ exports.login = async (args, callback) => {
     });
 
   callback();
-}
+};
 
 exports.logout = async(args, callback) => {
 
@@ -104,5 +107,5 @@ exports.logout = async(args, callback) => {
   //         spinner.fail('Login attempt failed. Please try again later');
   //       }
   //     });
-  //   callback();
-}
+  callback();
+};
