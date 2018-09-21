@@ -1,11 +1,9 @@
-const { Console } = require('console');
-
 exports.clear = (args, callback) => {
-  Console.clear();
+  console.clear();
   callback();
 };
 
 exports.test = (args, callback) => {
-  Console.log(args);
+  console.log(args);
   callback();
 };

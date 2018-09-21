@@ -4,8 +4,6 @@ const ora = require('ora');
 const fs = require('fs');
 const homedir = require('os').homedir();
 
-const { Console } = require('console');
-
 exports.register = async (args, callback) => {
   const email = await prompts({
     type: 'text',
@@ -65,7 +63,7 @@ exports.login = async (args, callback) => {
       fs.readFile(homedir + '/.netrc', function (err, data) {
         if (err) throw err;
         if (data.indexOf('machine ctl-server.herokuapp.com') >= 0) {
-          Console.log(data);
+          console.log(data);
         }
       });
 
@@ -74,7 +72,7 @@ exports.login = async (args, callback) => {
       }
       fs.appendFileSync(homedir + '/.netrc',
         'machine ctl-server.herokuapp.com\n'+
-        '  login ' + email.value +
+        '  login ' + email.value + '\n'+
         '  password ' + response.data.token + '\n');
 
       spinner.succeed('Successfully logged in');

@@ -24,6 +24,15 @@
         "semi": [
             "error",
             "always"
+        ],
+        "keyword-spacing": [
+          "error"
         ]
+    },
+    "overrides": {
+      "files": ["*.js"],
+      "rules": {
+        "no-console": "off"
+      }
     }
 }

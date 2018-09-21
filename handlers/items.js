@@ -1,6 +1,4 @@
-const { Console } = require('console');
-
 exports.list = (args, callback) => {
-  Console.log('Listing items');
+  console.log('Listing items');
   callback();
 };
