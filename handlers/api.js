@@ -40,50 +40,56 @@ exports.register = async (args, callback) => {
 };
 
 exports.login = async (args, callback) => {
-  const email = await prompts({
-    type: 'text',
-    name: 'value',
-    message: 'Email:'
-  });
+  const netrc = fs.readFileSync(homedir + '/.netrc');
 
-  const password = await prompts({
-    type: 'password',
-    name: 'value',
-    message: 'Password:'
-  });
+  let shouldContinue = true;
+  if (netrc.indexOf('machine ctl-server.herokuapp.com') >= 0) {
+    const confirm = await prompts({
+      type: 'confirm',
+      name: 'value',
+      message: 'Existing user credentials found in storage. Overwrite?',
+      initial: true
+    });
 
-  const spinner = ora('Logging in...').start();
+    shouldContinue = confirm.value;
+  }
 
-  await axios.post('https://ctl-server.herokuapp.com/login', {
-    email: email.value,
-    password: password.value
-  })
-    .then(response => {
-      let hasLogin = false;
-      fs.readFile(homedir + '/.netrc', function (err, data) {
-        if (err) throw err;
-        if (data.indexOf('machine ctl-server.herokuapp.com') >= 0) {
-          console.log(data);
+  if (shouldContinue) {
+    const email = await prompts({
+      type: 'text',
+      name: 'value',
+      message: 'Email:'
+    });
+
+    const password = await prompts({
+      type: 'password',
+      name: 'value',
+      message: 'Password:'
+    });
+
+    const spinner = ora('Logging in...').start();
+
+    await axios.post('https://ctl-server.herokuapp.com/login', {
+      email: email.value,
+      password: password.value
+    })
+      .then(async response => {
+        fs.appendFileSync(homedir + '/.netrc',
+          'machine ctl-server.herokuapp.com\n'+
+          '  login ' + email.value + '\n'+
+          '  password ' + response.data.token + '\n');
+        spinner.succeed('Successfully logged in');
+      })
+      .catch(error => {
+        if (error.response.status === 401) {
+          spinner.fail(error.response.data);
+        } else {
+          spinner.fail('Login attempt failed. Please try again later');
         }
       });
-
-      if (hasLogin) {
-
-      }
-      fs.appendFileSync(homedir + '/.netrc',
-        'machine ctl-server.herokuapp.com\n'+
-        '  login ' + email.value + '\n'+
-        '  password ' + response.data.token + '\n');
-
-      spinner.succeed('Successfully logged in');
-    })
-    .catch(error => {
-      if (error.response.status === 401) {
-        spinner.fail(error.response.data);
-      } else {
-        spinner.fail('Login attempt failed. Please try again later');
-      }
-    });
+  } else {
+    const spinner = ora('Aborting').start().fail();
+  }
 
   callback();
 };
