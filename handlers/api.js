@@ -40,16 +40,31 @@ exports.register = async (args, callback) => {
 };
 
 exports.login = async (args, callback) => {
-  const netrc = fs.readFileSync(homedir + '/.netrc');
+  const path = homedir + '/.netrc';
+  const netrc = fs.readFileSync(path, 'utf8');
 
   let shouldContinue = true;
-  if (netrc.indexOf('machine ctl-server.herokuapp.com') >= 0) {
+  const loginIndex = netrc.indexOf('machine ctl-server.herokuapp.com');
+  if (loginIndex >= 0) {
     const confirm = await prompts({
       type: 'confirm',
       name: 'value',
       message: 'Existing user credentials found in storage. Overwrite?',
       initial: true
     });
+
+    if (confirm.value) {
+      fs.readFile(path, 'utf8', function(err, data)
+        {
+          if (err) throw err;
+
+          var endIndex = netrc.indexOf('machine', loginIndex+8);
+          endIndex = endIndex < 0 ? netrc.length : endIndex;
+
+          const newData = data.slice(0, loginIndex).concat(data.slice(endIndex));
+          fs.writeFileSync(path, newData);
+        });
+    }
 
     shouldContinue = confirm.value;
   }
@@ -74,18 +89,14 @@ exports.login = async (args, callback) => {
       password: password.value
     })
       .then(async response => {
-        fs.appendFileSync(homedir + '/.netrc',
+        fs.appendFileSync(path,
           'machine ctl-server.herokuapp.com\n'+
           '  login ' + email.value + '\n'+
           '  password ' + response.data.token + '\n');
         spinner.succeed('Successfully logged in');
       })
       .catch(error => {
-        if (error.response.status === 401) {
-          spinner.fail(error.response.data);
-        } else {
-          spinner.fail('Login attempt failed. Please try again later');
-        }
+        spinner.fail(error.response.data);
       });
   } else {
     const spinner = ora('Aborting').start().fail();
