@@ -66,16 +66,15 @@ exports.login = async (args, callback) => {
     });
 
     if (confirm.value) {
-      fs.readFile(path, 'utf8', function(err, data)
-        {
-          if (err) throw err;
+      fs.readFile(path, 'utf8', function(err, data) {
+        if (err) throw err;
 
-          var endIndex = netrc.indexOf('machine', loginIndex+8);
-          endIndex = endIndex < 0 ? netrc.length : endIndex;
+        var endIndex = netrc.indexOf('machine', loginIndex+8);
+        endIndex = endIndex < 0 ? netrc.length : endIndex;
 
-          const newData = data.slice(0, loginIndex).concat(data.slice(endIndex));
-          fs.writeFileSync(path, newData);
-        });
+        const newData = data.slice(0, loginIndex).concat(data.slice(endIndex));
+        fs.writeFileSync(path, newData);
+      });
     }
 
     shouldContinue = confirm.value;
@@ -131,16 +130,15 @@ exports.logout = async(args, callback) => {
 
   const loginIndex = netrc.indexOf('machine ctl-server.herokuapp.com');
   if (loginIndex >= 0) {
-    fs.readFile(path, 'utf8', function(err, data)
-      {
-        if (err) throw err;
+    fs.readFile(path, 'utf8', function(err, data) {
+      if (err) throw err;
 
-        var endIndex = netrc.indexOf('machine', loginIndex+8);
-        endIndex = endIndex < 0 ? netrc.length : endIndex;
+      var endIndex = netrc.indexOf('machine', loginIndex+8);
+      endIndex = endIndex < 0 ? netrc.length : endIndex;
 
-        const newData = data.slice(0, loginIndex).concat(data.slice(endIndex));
-        fs.writeFileSync(path, newData);
-      });
+      const newData = data.slice(0, loginIndex).concat(data.slice(endIndex));
+      fs.writeFileSync(path, newData);
+    });
   }
   apiHelper.clearItems();
   spinner.succeed('Logged out');

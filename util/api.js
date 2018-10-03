@@ -2,9 +2,7 @@ const fs = require('fs');
 const axios = require('axios');
 const ora = require('ora');
 const homedir = require('os').homedir();
-const netrc = require('netrc-parser').default
-
-let items = {};
+const netrc = require('netrc-parser').default;
 
 /**
  * Returns whether or not the user is logged in
@@ -15,7 +13,7 @@ exports.isLoggedIn = () => {
   const netrc = fs.readFileSync(path, 'utf8');
 
   return netrc.indexOf('machine ctl-server.herokuapp.com') >= 0;
-}
+};
 
 /**
  * Gets the user's login token
@@ -23,7 +21,7 @@ exports.isLoggedIn = () => {
  */
 exports.getToken = () => {
   return netrc.machines['ctl-server.herokuapp.com'].password;
-}
+};
 
 /**
  * Returns the cached user items
@@ -31,20 +29,20 @@ exports.getToken = () => {
  */
 exports.getItems = () => {
   return this.items;
-}
+};
 
 /**
  * Deletes the cached user items
  */
 exports.clearItems = () => {
   this.items = null;
-}
+};
 
 /**
  * Retrieves the user's items and other data from the cloud
  */
 exports.refreshSync = async (message) => {
-  netrc.loadSync()
+  netrc.loadSync();
   if (!exports.isLoggedIn()) {
     return;
   }
@@ -71,13 +69,13 @@ exports.refreshSync = async (message) => {
         spinner.fail('Items retrieval failed. Please try again later (code '+error.response.status+')');
       }
     });
-}
+};
 
 /**
  * Refreshes the user's items asynchronously 
  */
 exports.refresh = async () => {
-  netrc.loadSync()
+  netrc.loadSync();
   if (!exports.isLoggedIn()) {
     return;
   }
@@ -93,7 +91,7 @@ exports.refresh = async () => {
         this.items = response.data;
       }
     })
-    .catch(error => {
+    .catch(() => {
       this.items = null;
     });
-}
+};

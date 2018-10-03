@@ -1,5 +1,4 @@
 const ora = require('ora');
-const axios = require('axios');
 const apiHelper = require('../util/api.js');
 
 /**
@@ -30,4 +29,4 @@ exports.refresh = async (args, callback) => {
   }
 
   callback();
-}
+};
