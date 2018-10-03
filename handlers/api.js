@@ -4,6 +4,11 @@ const ora = require('ora');
 const fs = require('fs');
 const homedir = require('os').homedir();
 
+/**
+ * Registers a new account.
+ * @param args     Command arguments
+ * @param callback Callback function
+ */
 exports.register = async (args, callback) => {
   const email = await prompts({
     type: 'text',
@@ -39,6 +44,11 @@ exports.register = async (args, callback) => {
   callback();
 };
 
+/**
+ * Logs the user in and stores credentials in .netrc
+ * @param args     Command arguments
+ * @param callback Callback function
+ */
 exports.login = async (args, callback) => {
   const path = homedir + '/.netrc';
   const netrc = fs.readFileSync(path, 'utf8');
@@ -99,28 +109,38 @@ exports.login = async (args, callback) => {
         spinner.fail(error.response.data);
       });
   } else {
-    const spinner = ora('Aborting').start().fail();
+    ora('Aborting').start().fail();
   }
 
   callback();
 };
 
+/**
+ * Logs the user out and deletes credentials
+ * @param args     Command arguments
+ * @param callback Callback function
+ */
 exports.logout = async(args, callback) => {
-
   // TODO: Finish implementing API endpoint
+  const path = homedir + '/.netrc';
+  const netrc = fs.readFileSync(path, 'utf8');
+  const spinner = ora('Logging out...').start();
 
-  //   const spinner = ora('Logging out...').start();
+  const loginIndex = netrc.indexOf('machine ctl-server.herokuapp.com');
+  if (loginIndex >= 0) {
+    fs.readFile(path, 'utf8', function(err, data)
+      {
+        if (err) throw err;
 
-  //   await axios.post('https://ctl-server.herokuapp.com/logout',)
-  //     .then(response => {
-  //       spinner.succeed('Successfully logged out');
-  //     })
-  //     .catch(error => {
-  //       if(error.response.status === 401) {
-  //         spinner.fail(error.response.data);
-  //       } else {
-  //         spinner.fail('Login attempt failed. Please try again later');
-  //       }
-  //     });
+        var endIndex = netrc.indexOf('machine', loginIndex+8);
+        endIndex = endIndex < 0 ? netrc.length : endIndex;
+
+        const newData = data.slice(0, loginIndex).concat(data.slice(endIndex));
+        fs.writeFileSync(path, newData);
+      });
+  }
+  spinner.succeed('Logged out');
+
   callback();
 };
+

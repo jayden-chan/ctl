@@ -2,7 +2,9 @@ const vorpal = require('vorpal')();
 const items = require('./handlers/items.js');
 const simple = require('./handlers/simple.js');
 const api = require('./handlers/api.js');
+const apiUtil = require('./util/api.js');
 
+// Commands
 vorpal
   .command('ls', 'Lists all items')
   .option('-a', 'Lists all items including hidden')
@@ -30,6 +32,15 @@ vorpal
   .command('logout', 'Log out')
   .action(api.logout);
 
-vorpal
-  .delimiter('ctl $')
-  .show();
+(async () => {
+  // Sync if logged in
+  if (apiUtil.isLoggedIn()) {
+    await apiUtil.sync();
+  }
+
+  // Start Vorpal
+  vorpal
+    .delimiter('ctl >')
+    .show();
+
+})();
