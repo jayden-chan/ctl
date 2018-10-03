@@ -4,6 +4,8 @@ const ora = require('ora');
 const fs = require('fs');
 const homedir = require('os').homedir();
 
+const apiHelper = require('../util/api.js');
+
 /**
  * Registers a new account.
  * @param args     Command arguments
@@ -104,6 +106,7 @@ exports.login = async (args, callback) => {
           '  login ' + email.value + '\n'+
           '  password ' + response.data.token + '\n');
         spinner.succeed('Successfully logged in');
+        apiHelper.refresh();
       })
       .catch(error => {
         spinner.fail(error.response.data);
@@ -139,6 +142,7 @@ exports.logout = async(args, callback) => {
         fs.writeFileSync(path, newData);
       });
   }
+  apiHelper.clearItems();
   spinner.succeed('Logged out');
 
   callback();

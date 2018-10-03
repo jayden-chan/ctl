@@ -6,19 +6,19 @@ const apiUtil = require('./util/api.js');
 
 // Commands
 vorpal
-  .command('ls', 'Lists all items')
-  .option('-a', 'Lists all items including hidden')
+  .command('ls', 'List all items')
+  .option('-a', 'List all items including hidden')
   .action(items.list);
 
 vorpal
-  .command('clear', 'Clears the virtual terminal')
-  .alias('c')
-  .action(simple.clear);
+  .command('refresh', 'Refresh items')
+  .alias('rf')
+  .action(items.refresh);
 
 vorpal
-  .command('test', 'Random testing function')
-  .option('-f', 'Force test')
-  .action(simple.test);
+  .command('clear', 'Clear the terminal')
+  .alias('c')
+  .action(simple.clear);
 
 vorpal
   .command('register', 'Register a new account')
@@ -35,7 +35,7 @@ vorpal
 (async () => {
   // Sync if logged in
   if (apiUtil.isLoggedIn()) {
-    await apiUtil.sync();
+    await apiUtil.refreshSync('Login credentials found, refeshing items...');
   }
 
   // Start Vorpal

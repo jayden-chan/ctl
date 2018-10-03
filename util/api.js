@@ -4,6 +4,8 @@ const ora = require('ora');
 const homedir = require('os').homedir();
 const netrc = require('netrc-parser').default
 
+let items = {};
+
 /**
  * Returns whether or not the user is logged in
  * @return {boolean} Whether or not the user is logged in
@@ -24,16 +26,31 @@ exports.getToken = () => {
 }
 
 /**
+ * Returns the cached user items
+ * @return {Object} The user's items
+ */
+exports.getItems = () => {
+  return this.items;
+}
+
+/**
+ * Deletes the cached user items
+ */
+exports.clearItems = () => {
+  this.items = null;
+}
+
+/**
  * Retrieves the user's items and other data from the cloud
  */
-exports.sync = async () => {
+exports.refreshSync = async (message) => {
   netrc.loadSync()
   if (!exports.isLoggedIn()) {
     return;
   }
 
   const token = exports.getToken();
-  const spinner = ora('Login credentials found, synchronizing...').start();
+  const spinner = ora(message).start();
   await axios({
     method: 'get',
     url: 'https://ctl-server.herokuapp.com/items',
@@ -41,6 +58,7 @@ exports.sync = async () => {
   })
     .then(response => {
       if (response.status >= 200) {
+        this.items = response.data;
         spinner.succeed('Items synced');
       }
     })
@@ -52,5 +70,30 @@ exports.sync = async () => {
       } else {
         spinner.fail('Items retrieval failed. Please try again later (code '+error.response.status+')');
       }
+    });
+}
+
+/**
+ * Refreshes the user's items asynchronously 
+ */
+exports.refresh = async () => {
+  netrc.loadSync()
+  if (!exports.isLoggedIn()) {
+    return;
+  }
+
+  const token = exports.getToken();
+  await axios({
+    method: 'get',
+    url: 'https://ctl-server.herokuapp.com/items',
+    headers: { Authorization: 'Bearer '+token }
+  })
+    .then(response => {
+      if (response.status >= 200) {
+        this.items = response.data;
+      }
+    })
+    .catch(error => {
+      this.items = null;
     });
 }
