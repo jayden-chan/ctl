@@ -11,34 +11,25 @@ exports.list = async (args, callback) => {
   if (!apiHelper.isLoggedIn()) {
     ora('Not logged in').start().fail();
   } else {
-    // Get the items from the apiHelper and perform a deep copy
+    // Get the items from the apiHelper and perform a deep copy.
     // JSON method is the fastest deep copy that I know of
     let items = JSON.parse(JSON.stringify(apiHelper.getItems()));
 
     if (args.options.s) {
+      const priorty = new Map();
+      priorty.set('overdue', 2);
+      priorty.set('pending', 1);
+      priorty.set('complete', 0);
+
       items.sort((a, b) => {
-        if (a.status < b.status)
-          return 1;
-        if (a.status > b.status)
-          return -1;
-        return 0;
+        const ap = priorty.get(a.status);
+        const bp = priorty.get(b.status);
+        return (ap < bp) ? 1 : (bp < ap) ? -1 : 0;
       });
     } else if (args.options.d) {
-      items.sort((a, b) => {
-        if (a.due < b.due)
-          return -1;
-        if (a.due > b.due)
-          return 1;
-        return 0;
-      });
+      items.sort((a, b) => (a.due < b.due) ? 1 : (b.due < a.due) ? -1 : 0);
     } else if (args.options.f) {
-      items.sort((a, b) => {
-        if (a.folder < b.folder)
-          return -1;
-        if (a.folder > b.folder)
-          return 1;
-        return 0;
-      });
+      items.sort((a, b) => (a.folder < b.folder) ? 1 : (b.folder < a.folder) ? -1 : 0);
     }
 
     if (args.options.r) {

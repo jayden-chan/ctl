@@ -9,6 +9,7 @@ vorpal
   .command('ls', 'List all items')
   .option('-s', 'Sort by status')
   .option('-d', 'Sort by due date')
+  .option('-f', 'Sort by folder')
   .option('-r', 'Reverse sort')
   .action(items.list);
 

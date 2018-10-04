@@ -28,7 +28,7 @@ exports.getToken = () => {
  * @return {Object} The user's items
  */
 exports.getItems = () => {
-  return this.items.items;
+  return this.items;
 };
 
 /**
@@ -56,7 +56,10 @@ exports.refreshSync = async (message) => {
   })
     .then(response => {
       if (response.status >= 200) {
-        this.items = response.data;
+        this.items = response.data.items;
+        this.items.forEach((item, i) => {
+          item.index = i+1;
+        });
         spinner.succeed('Items synced');
       }
     })
@@ -88,7 +91,10 @@ exports.refresh = async () => {
   })
     .then(response => {
       if (response.status >= 200) {
-        this.items = response.data;
+        this.items = response.data.items;
+        this.items.forEach((item, i) => {
+          item.index = i+1;
+        });
       }
     })
     .catch(() => {

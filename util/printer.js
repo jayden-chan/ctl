@@ -6,13 +6,13 @@ exports.printObj = async (items) => {
   const otherWidth = Math.floor(2*width / 9)-1;
 
   const table = new Table({
-    head: ['#', 'Description', 'Folder', 'Due Date', 'Status']
+    head: ['Key', 'Description', 'Folder', 'Due Date', 'Status']
     , colWidths: [5, otherWidth, otherWidth, otherWidth, 10]
   });
 
   items.forEach((item, i) => {
     table.push(
-      [i+1, item.description, item.folder || '', item.due || '', item.status]
+      [item.index, item.description, item.folder || '', item.due || '', item.status]
     );
   });
 
