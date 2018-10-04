@@ -56,3 +56,21 @@ exports.refresh = async (args, callback) => {
 
   callback();
 };
+
+/**
+ * Deletes an item
+ * @param args     Command arguments
+ * @param callback Callback function
+ */
+exports.delete = function(args, callback) {
+  const index = Number(args.num);
+
+  if (!index) {
+    ora('Not a valid number').start().fail();
+  } else {
+    apiHelper.getItems().splice(index-1);
+    ora('Item deleted').start().succeed();
+  }
+
+  callback();
+}

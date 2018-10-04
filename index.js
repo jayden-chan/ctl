@@ -6,7 +6,8 @@ const apiUtil = require('./util/api.js');
 
 // Commands
 vorpal
-  .command('ls', 'List all items')
+  .command('list', 'List all items')
+  .alias('l')
   .option('-s', 'Sort by status')
   .option('-d', 'Sort by due date')
   .option('-f', 'Sort by folder')
@@ -14,13 +15,17 @@ vorpal
   .action(items.list);
 
 vorpal
+  .command('delete <num>', 'Delete an item')
+  .alias('d')
+  .action(items.delete);
+
+vorpal
   .command('refresh', 'Refresh items')
-  .alias('rf')
+  .alias('r')
   .action(items.refresh);
 
 vorpal
   .command('clear', 'Clear the terminal')
-  .alias('c')
   .action(simple.clear);
 
 vorpal
