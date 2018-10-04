@@ -58,6 +58,16 @@ exports.refresh = async (args, callback) => {
 };
 
 /**
+ * Adds a new item
+ * @param args     Command arguments
+ * @param callback Callback function
+ */
+exports.add = function(args, callback) {
+  console.log(args);
+  callback();
+}
+
+/**
  * Deletes an item
  * @param args     Command arguments
  * @param callback Callback function

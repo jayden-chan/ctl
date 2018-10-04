@@ -15,6 +15,14 @@ vorpal
   .action(items.list);
 
 vorpal
+  .command('add [string...]', 'Add a new item')
+  .alias('a')
+  .option('-f <folder>', 'Folder to add item under')
+  .option('-d <due>', 'Specify due date')
+  .option('-s <status>', 'Specify status')
+  .action(items.add);
+
+vorpal
   .command('delete <num>', 'Delete an item')
   .alias('d')
   .action(items.delete);
