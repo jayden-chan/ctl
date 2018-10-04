@@ -5,7 +5,7 @@
   "main": "index.js",
   "dependencies": {
     "axios": "^0.18.0",
-    "cli-table": "^0.3.1",
+    "cli-table2": "^0.2.0",
     "netrc-parser": "^3.1.6",
     "ora": "^3.0.0",
     "prompts": "^1.1.1",

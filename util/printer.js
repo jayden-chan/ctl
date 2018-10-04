@@ -1,13 +1,13 @@
-const Table = require('cli-table');
+const Table = require('cli-table2');
 
 exports.printObj = async (items) => {
   const width = process.stdout.columns;
-  const numWidth = Math.floor(width/12)-1;
-  const otherWidth = Math.floor(2*width / 9)-1;
+  const dynamicWidth = Math.min(Math.floor((width - 15) / 3)-2, 35);
 
   const table = new Table({
-    head: ['Key', 'Description', 'Folder', 'Due Date', 'Status']
-    , colWidths: [5, otherWidth, otherWidth, otherWidth, 10]
+    head: ['Key', 'Description', 'Folder', 'Due Date', 'Status'], 
+    colWidths: [5, dynamicWidth, dynamicWidth, dynamicWidth, 10],
+    wordWrap: true
   });
 
   items.forEach((item, i) => {
