@@ -32,6 +32,23 @@ exports.getItems = () => {
 };
 
 /**
+ * Removes the item with with the specified index.
+ *
+ * @param indexToSplice The index to remove
+ * @return {Boolean} Whether an item was removed or not
+ */
+exports.spliceItem = (indexToSplice) => {
+  for (let i = 0; i < this.items.length; i++) {
+    if (this.items[i].index === indexToSplice) {
+      this.items.splice(i, 1);
+      return true;
+    }
+  }
+
+  return false;
+}
+
+/**
  * Deletes the cached user items
  */
 exports.clearItems = () => {

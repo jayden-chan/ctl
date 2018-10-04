@@ -68,8 +68,13 @@ exports.delete = function(args, callback) {
   if (!index) {
     ora('Not a valid number').start().fail();
   } else {
-    apiHelper.getItems().splice(index-1);
-    ora('Item deleted').start().succeed();
+    const removed = apiHelper.spliceItem(index);
+
+    if (removed) {
+      ora('Item deleted').start().succeed();
+    } else {
+      ora('Item does not exist').start().fail();
+    }
   }
 
   callback();
