@@ -7,7 +7,9 @@ const apiUtil = require('./util/api.js');
 // Commands
 vorpal
   .command('ls', 'List all items')
-  .option('-a', 'List all items including hidden')
+  .option('-s', 'Sort by status')
+  .option('-d', 'Sort by due date')
+  .option('-r', 'Reverse sort')
   .action(items.list);
 
 vorpal

@@ -124,8 +124,10 @@ exports.login = async (args, callback) => {
  */
 exports.logout = async(args, callback) => {
   // TODO: Finish implementing API endpoint
+
   const path = homedir + '/.netrc';
   const netrc = fs.readFileSync(path, 'utf8');
+
   const spinner = ora('Logging out...').start();
 
   const loginIndex = netrc.indexOf('machine ctl-server.herokuapp.com');

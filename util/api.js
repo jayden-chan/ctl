@@ -28,7 +28,7 @@ exports.getToken = () => {
  * @return {Object} The user's items
  */
 exports.getItems = () => {
-  return this.items;
+  return this.items.items;
 };
 
 /**
@@ -72,7 +72,7 @@ exports.refreshSync = async (message) => {
 };
 
 /**
- * Refreshes the user's items asynchronously 
+ * Refreshes the user's items asynchronously
  */
 exports.refresh = async () => {
   netrc.loadSync();
