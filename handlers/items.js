@@ -1,5 +1,5 @@
 const ora = require('ora');
-const apiHelper = require('../util/apihelper.js');
+const apihelper = require('../util/apihelper.js');
 const itemshelper = require('../util/itemshelper.js');
 const printer = require('../util/printer.js');
 
@@ -9,10 +9,10 @@ const printer = require('../util/printer.js');
  * @param callback Callback function
  */
 exports.list = async (args, callback) => {
-  if (!apiHelper.isLoggedIn()) {
+  if (!apihelper.isLoggedIn()) {
     ora('Not logged in').start().fail();
   } else {
-    // Get the items from the apiHelper and perform a deep copy.
+    // Get the items from the apihelper and perform a deep copy.
     // JSON method is the fastest deep copy that I know of
     let items = JSON.parse(JSON.stringify(itemshelper.get()));
 
@@ -49,10 +49,10 @@ exports.list = async (args, callback) => {
  * @param callback Callback function
  */
 exports.refresh = async (args, callback) => {
-  if (!apiHelper.isLoggedIn()) {
+  if (!apihelper.isLoggedIn()) {
     ora('Not logged in').start().fail();
   } else {
-    await apiHelper.refreshSync('Refreshing items...');
+    await apihelper.refreshSync('Refreshing items...');
   }
 
   callback();

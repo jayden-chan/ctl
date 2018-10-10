@@ -2,7 +2,7 @@ const vorpal = require('vorpal')();
 const items = require('./handlers/items.js');
 const simple = require('./handlers/simple.js');
 const api = require('./handlers/api.js');
-const apiUtil = require('./util/apihelper.js');
+const apihelper = require('./util/apihelper.js');
 
 // Commands
 vorpal
@@ -34,6 +34,7 @@ vorpal
 
 vorpal
   .command('clear', 'Clear the terminal')
+  .alias('c')
   .action(simple.clear);
 
 vorpal
@@ -50,8 +51,8 @@ vorpal
 
 (async () => {
   // Sync if logged in
-  if (apiUtil.isLoggedIn()) {
-    await apiUtil.refreshSync('Login credentials found, refeshing items...');
+  if (apihelper.isLoggedIn()) {
+    await apihelper.refreshSync('Login credentials found, refeshing items...');
   }
 
   // Start Vorpal
