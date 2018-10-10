@@ -4,7 +4,7 @@ const ora = require('ora');
 const fs = require('fs');
 const homedir = require('os').homedir();
 
-const apiHelper = require('../util/api.js');
+const apiHelper = require('../util/apihelper.js');
 
 /**
  * Registers a new account.

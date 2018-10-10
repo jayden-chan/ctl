@@ -2,7 +2,7 @@ const vorpal = require('vorpal')();
 const items = require('./handlers/items.js');
 const simple = require('./handlers/simple.js');
 const api = require('./handlers/api.js');
-const apiUtil = require('./util/api.js');
+const apiUtil = require('./util/apihelper.js');
 
 // Commands
 vorpal
@@ -15,7 +15,7 @@ vorpal
   .action(items.list);
 
 vorpal
-  .command('add [string...]', 'Add a new item')
+  .command('add [description...]', 'Add a new item')
   .alias('a')
   .option('-f <folder>', 'Folder to add item under')
   .option('-d <due>', 'Specify due date')

@@ -1,5 +1,6 @@
 const ora = require('ora');
-const apiHelper = require('../util/api.js');
+const apiHelper = require('../util/apihelper.js');
+const itemshelper = require('../util/itemshelper.js');
 const printer = require('../util/printer.js');
 
 /**
@@ -13,7 +14,7 @@ exports.list = async (args, callback) => {
   } else {
     // Get the items from the apiHelper and perform a deep copy.
     // JSON method is the fastest deep copy that I know of
-    let items = JSON.parse(JSON.stringify(apiHelper.getItems()));
+    let items = JSON.parse(JSON.stringify(itemshelper.get()));
 
     if (args.options.s) {
       const priorty = new Map();
@@ -61,9 +62,31 @@ exports.refresh = async (args, callback) => {
  * Adds a new item
  * @param args     Command arguments
  * @param callback Callback function
+ *
+ * TODO: Make API able to handle multiple
+ * additions/deletions in one request
  */
 exports.add = function(args, callback) {
-  console.log(args);
+  if (args.description !== undefined) {
+    const folder = args.options.f || '';
+    const due = args.options.d || '';
+    const status = args.options.s || 'pending';
+    const desc = args.description.join(' ');
+    const itemsLen = itemshelper.get().length;
+
+    itemshelper.add({
+      status: status,
+      due: due,
+      folder: folder,
+      description: desc,
+      index: itemsLen+1
+    });
+
+    ora('Item created').start().succeed();
+  } else {
+    ora('Please provide a description').start().fail();
+  }
+
   callback();
 }
 
@@ -78,7 +101,7 @@ exports.delete = function(args, callback) {
   if (!index) {
     ora('Not a valid number').start().fail();
   } else {
-    const removed = apiHelper.spliceItem(index);
+    const removed = itemshelper.splice(index);
 
     if (removed) {
       ora('Item deleted').start().succeed();

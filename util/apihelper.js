@@ -4,6 +4,8 @@ const ora = require('ora');
 const homedir = require('os').homedir();
 const netrc = require('netrc-parser').default;
 
+const itemshelper = require('./itemshelper.js');
+
 /**
  * Returns whether or not the user is logged in
  * @return {boolean} Whether or not the user is logged in
@@ -24,38 +26,6 @@ exports.getToken = () => {
 };
 
 /**
- * Returns the cached user items
- * @return {Object} The user's items
- */
-exports.getItems = () => {
-  return this.items;
-};
-
-/**
- * Removes the item with with the specified index.
- *
- * @param indexToSplice The index to remove
- * @return {Boolean} Whether an item was removed or not
- */
-exports.spliceItem = (indexToSplice) => {
-  for (let i = 0; i < this.items.length; i++) {
-    if (this.items[i].index === indexToSplice) {
-      this.items.splice(i, 1);
-      return true;
-    }
-  }
-
-  return false;
-}
-
-/**
- * Deletes the cached user items
- */
-exports.clearItems = () => {
-  this.items = null;
-};
-
-/**
  * Retrieves the user's items and other data from the cloud
  */
 exports.refreshSync = async (message) => {
@@ -73,10 +43,12 @@ exports.refreshSync = async (message) => {
   })
     .then(response => {
       if (response.status >= 200) {
-        this.items = response.data.items;
-        this.items.forEach((item, i) => {
+        let tmpItems = response.data.items;
+        tmpItems.forEach((item, i) => {
           item.index = i+1;
         });
+
+        itemshelper.load(tmpItems);
         spinner.succeed('Items synced');
       }
     })
@@ -88,6 +60,8 @@ exports.refreshSync = async (message) => {
       } else {
         spinner.fail('Items retrieval failed. Please try again later (code '+error.response.status+')');
       }
+
+      itemshelper.load(null);
     });
 };
 
@@ -108,13 +82,15 @@ exports.refresh = async () => {
   })
     .then(response => {
       if (response.status >= 200) {
-        this.items = response.data.items;
-        this.items.forEach((item, i) => {
+        let tmpItems = response.data.items;
+        tmpItems.forEach((item, i) => {
           item.index = i+1;
         });
+
+        itemshelper.load(tmpItems);
       }
     })
     .catch(() => {
-      this.items = null;
+      itemshelper.load(null);
     });
 };
